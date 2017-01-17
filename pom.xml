@@ -1,8 +1,126 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.ayoub.cas</groupId>
-  <artifactId>CasServer</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>war</packaging>
-  <name>Client cas Configuration</name>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ayoub.cas</groupId>
+	<artifactId>CasServer</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>Client cas Configuration</name>
+
+	<properties>
+		<cas.version>5.0.1</cas.version>
+		<springboot.version>1.4.2.RELEASE</springboot.version>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mssql.version>1.3.1</mssql.version>
+	</properties>
+
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apereo.cas</groupId>
+				<artifactId>cas-server-support-bom</artifactId>
+				<version>${cas.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
+
+
+
+
+
+	<dependencies>
+	<!-- cas webapp dependency to evelay -->
+		<dependency>
+			<groupId>org.apereo.cas</groupId>
+			<artifactId>cas-server-webapp</artifactId>
+			<version>${cas.version}</version>
+			<type>war</type>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- Dependence pour authentification txt -->
+		<dependency>
+			<groupId>org.apereo.cas</groupId>
+			<artifactId>cas-server-support-generic</artifactId>
+			<version>${cas.version}</version>
+		</dependency>
+	</dependencies>
+
+
+
+
+
+
+
+
+
+
+	<!-- Build section -->
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.rimerosolutions.maven.plugins</groupId>
+				<artifactId>wrapper-maven-plugin</artifactId>
+				<version>0.0.4</version>
+				<configuration>
+					<verifyDownload>true</verifyDownload>
+					<checksumAlgorithm>MD5</checksumAlgorithm>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${springboot.version}</version>
+				<configuration>
+					<mainClass>org.springframework.boot.loader.WarLauncher</mainClass>
+					<addResources>true</addResources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<warName>CasServer</warName>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<recompressZippedFiles>false</recompressZippedFiles>
+					<archive>
+						<compress>false</compress>
+						<manifestFile>${project.build.directory}/war/work/org.apereo.cas/cas-server-webapp/META-INF/MANIFEST.MF
+						</manifestFile>
+					</archive>
+					<overlays>
+						<overlay>
+							<groupId>org.apereo.cas</groupId>
+							<artifactId>cas-server-webapp</artifactId>
+							<excludes>
+								<exclude>WEB-INF/cas.properties</exclude>
+								<exclude>WEB-INF/classes/log4j.xml</exclude>
+							</excludes>
+						</overlay>
+					</overlays>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>CasServer</finalName>
+	</build>
+
+
+
+
 </project>
